@@ -13,7 +13,7 @@ const dbwrite = async ()=>{
     await campGround.deleteMany({});
     for(i=0;i<50;i++){
         let num=(len)=>(Math.floor(Math.random()*len));
-        let title=seed.descriptors[num(seed.descriptors.length)]+seed.places[num(seed.places.length)];
+        let title=seed.descriptors[num(seed.descriptors.length)]+" "+seed.places[num(seed.places.length)];
         let location=cities[num(cities.length)];
         let camp = new campGround({
             title:`${title}`,
@@ -22,4 +22,7 @@ const dbwrite = async ()=>{
         await camp.save();
     }
 }
-dbwrite();
+dbwrite()
+.then(()=>{
+    mongoose.connection.close();
+});
