@@ -2,7 +2,9 @@ const express= require('express');
 const mongoose = require('mongoose');
 const path = require('path')
 const methodOverride = require('method-override');
+const ejsMate = require('ejs-mate');
 const app = express();
+const morgan = require('morgan');
 const campGround = require('./modules/campGround');
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
     useNewUrlParser: true,
@@ -11,13 +13,13 @@ mongoose.connect('mongodb://localhost:27017/yelp-camp', {
 .then(console.log('db connected'))
 .catch(err=>console.log(err));
 
-
+app.engine('ejs',ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
-
+app.use(morgan('dev'));
 app.get("/",(req,res)=>{
     res.send("hello")
 });

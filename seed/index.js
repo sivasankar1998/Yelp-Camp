@@ -17,7 +17,10 @@ const dbwrite = async ()=>{
         let location=cities[num(cities.length)];
         let camp = new campGround({
             title:`${title}`,
-            location:`${location.city},${location.state}`
+            location:`${location.city},${location.state}`,
+            image:'http://source.unsplash.com/collection/483251',
+            price:`${num(30)}`,
+            description:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates, sequi et exercitationem quas incidunt in dicta nostrum libero pariatur sint. Dignissimos, odit? Explicabo laudantium libero nisi deleniti facilis adipisci eaque.'
         });
         await camp.save();
     }

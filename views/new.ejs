@@ -1,29 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>create new campground</title>
-</head>
-
-<body>
-    <h1>Create a new campground</h1>
-
-    <form action="/campgrounds" method="POST">
-        <div>
-            <label for="title">Enter Campground name</label>
-            <input id="title" type="text" placeholder="Enter name" name="campground[title]">
-        </div>
-        <div>
-            <label for="location">Enter Campground location</label>
-            <input id="location" type="text" placeholder="Enter location" name="campground[location]">
-        </div>      
-        <button>Create</button> 
-        <a href="/campgrounds">cancel</a> 
-    </form>
-
-</body>
-
-</html>
+<% layout('layouts/boilerplate') %>
+    <h1 class="text-center m-3">Create new Campground</h1>
+    <div class="col-6 offset-3">
+        <form action="/campgrounds" class="col" method="POST">
+            <div class="col-md-12 mb-3">
+                <label for="inputEmail4" class="form-label">Title</label>
+                <input type="text" name="campground[title]" class="form-control" id="inputEmail4">
+            </div>
+            <div class="col-md-12 mb-3">
+                <label for="inputPassword4" class="form-label">Location</label>
+                <input type="text" name="campground[location]" class="form-control" id="inputPassword4">
+            </div>
+            <div class="col-md-12 mb-3">
+                <label for="image" class="form-label">Image URL</label>
+                <input type="text" name="campground[image]" class="form-control" id="image">
+            </div>
+            <div class="col-md-12 mb-3">
+                <label for="price" class="form-label">Price</label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">$</span>
+                    <input type="text" placeholder="0.00" name="campground[price]" class="form-control" id="price" aria-describedby="price">
+                </div>
+            </div>
+            <div class="col-md-12 mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" name="campground[description]" id="description" aria-label="With textarea"></textarea>
+            </div>
+            <div class="col-12 mx-auto text-left mb-3">
+                <button type="submit" class="btn btn-success">Create</button>
+                <a href="/campgrounds" class="btn btn-secondary ms-3">Back</a>
+            </div>
+        </form>
+    </div>
