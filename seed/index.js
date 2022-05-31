@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const campGround = require('../modules/campGround')
+const campGround = require('../modules/campGround');
+const reviews = require('../modules/reviews');
 const cities = require('./cities');
 const seed = require('./seedHelpers');
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
@@ -10,6 +11,7 @@ mongoose.connect('mongodb://localhost:27017/yelp-camp', {
 .catch(err=>console.log(err));
 
 const dbwrite = async ()=>{
+    await reviews.deleteMany({});
     await campGround.deleteMany({});
     for(i=0;i<50;i++){
         let num=(len)=>(Math.floor(Math.random()*len));
