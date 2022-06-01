@@ -3,10 +3,9 @@ const {newSchema} = require('../errorhandling/joiSchema');
 const asyncCatch = require('../errorhandling/asyncCatch');
 const expressError = require('../errorhandling/ExpressError');
 const campGround = require('../modules/campGround');
+const router = express.Router({mergeParams:true});
 
-const router = express.Router();
-
-function newValidate(req,res,next){
+const newValidate = (req,res,next)=>{
     const {error} = newSchema.validate(req.body);
     if(error){
         let msg = error.details.map(obj => obj.message).join(",");
@@ -29,30 +28,40 @@ router.get('/new',(req,res)=>{
 
 router.get('/:id/edit',asyncCatch(async (req,res,next)=>{
     let campground = await campGround.findById(req.params.id);
+    if(!campground){
+        req.flash('error','No Campground found by that ID');
+        return res.redirect('/campgrounds');
+    }
     res.render('edit',{campground});
 }));
 
 router.get('/:id',asyncCatch(async (req,res,next)=>{
     let campground = await campGround.findById(req.params.id).populate('reviews');
+    if(!campground){
+        req.flash('error','No Campground found by that ID');
+        return res.redirect('/campgrounds');
+    }
     res.render('show',{campground});
 }));
 
 router.post('/',newValidate,asyncCatch(async (req,res,next)=>{
-    newValidate(req.body);
     let camp = new campGround(req.body.campground);
     await camp.save();
+    req.flash('success','New Campground created!!!');
     res.redirect(`/campgrounds/${camp._id}`);
 }));
 
 router.put('/:id',newValidate,asyncCatch(async (req,res,next)=>{
     let {id} = req.params;
     await campGround.findByIdAndUpdate(id,{...req.body.campground});
+    req.flash('success','Campground edited successfully!!!');
     res.redirect(`/campgrounds/${id}`);
 }));
 
 router.delete('/:id',asyncCatch(async (req,res,next)=>{
     let {id} = req.params;
     await campGround.findByIdAndDelete(id);
+    req.flash('success','Campground deleted successfully!!!');
     res.redirect('/campgrounds');
 }));
 

@@ -6,8 +6,12 @@ const ejsMate = require('ejs-mate');
 const asyncCatch = require('./errorhandling/asyncCatch');
 const expressError = require('./errorhandling/ExpressError');
 const morgan = require('morgan');
+const session = require('express-session');
+const flash = require('connect-flash');
+
 const campGround = require('./modules/campGround');
 const Reviews = require('./modules/reviews');
+
 const campRoute = require('./routes/campgrounds');
 const reviewRoute = require('./routes/reviews');
 
@@ -28,9 +32,27 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(morgan('dev'));
 
+const sessionConfig = {
+    secret:'secretcookie',
+    resave:false,
+    saveUninitialized:true,
+    cookie:{
+        expires: Date.now() + (1000*60*60*24*7),
+        maxAge: (1000*60*60*24*7),
+        httpOnly: true
+    }
+}
+app.use(session(sessionConfig));
+app.use(flash());
+app.use((req,res,next)=> {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    next();
+});
+
+
 app.use('/campgrounds',campRoute);
 app.use('/campgrounds/:id/reviews',reviewRoute);
-
 
 app.get('/',(req,res)=>{
     res.send("hello");
