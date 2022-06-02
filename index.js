@@ -8,12 +8,16 @@ const expressError = require('./errorhandling/ExpressError');
 const morgan = require('morgan');
 const session = require('express-session');
 const flash = require('connect-flash');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
 
-const campGround = require('./modules/campGround');
-const Reviews = require('./modules/reviews');
+const campGround = require('./models/campGround');
+const Reviews = require('./models/reviews');
+const User = require('./models/users');
 
 const campRoute = require('./routes/campgrounds');
 const reviewRoute = require('./routes/reviews');
+const authRoute = require('./routes/userAuth');
 
 const app = express();
 
@@ -50,9 +54,13 @@ app.use((req,res,next)=> {
     next();
 });
 
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use('/campgrounds',campRoute);
 app.use('/campgrounds/:id/reviews',reviewRoute);
+app.use('/',authRoute);
 
 app.get('/',(req,res)=>{
     res.send("hello");

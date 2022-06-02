@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const campGround = require('../modules/campGround');
-const reviews = require('../modules/reviews');
+const campGround = require('../models/campGround');
+const reviews = require('../models/reviews');
 const cities = require('./cities');
 const seed = require('./seedHelpers');
 mongoose.connect('mongodb://localhost:27017/yelp-camp', {
