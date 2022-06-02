@@ -3,8 +3,8 @@ const {newSchema} = require('../errorhandling/joiSchema');
 const asyncCatch = require('../errorhandling/asyncCatch');
 const expressError = require('../errorhandling/ExpressError');
 const campGround = require('../models/campGround');
-const router = express.Router();
 const checkAuthentication = require('./authMiddleware');
+const router = express.Router({mergeParams:true});
 
 const newValidate = (req,res,next)=>{
     const {error} = newSchema.validate(req.body);
