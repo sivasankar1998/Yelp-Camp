@@ -26,9 +26,18 @@ router.post('/register',asyncCatch(async (req,res)=>{
     }
 }));
 
-router.post('/login',passport.authenticate('local', { failureFlash: true,failureRedirect: '/login' }),asyncCatch(async (req,res)=>{
+router.get('/logout',asyncCatch(async (req,res,next)=>{
+    req.flash('success','Logged out');
+    let redirect = "/campgrounds";
+    req.logout((err)=>{
+        if (err) return next(err); });
+    res.redirect(redirect);
+}));
+
+router.post('/login',passport.authenticate('local', { failureFlash: true,failureRedirect: '/login',keepSessionInfo: true }),asyncCatch(async (req,res)=>{
     req.flash('success','Logged in');
-    return res.redirect('/campgrounds');
+    let redirect = req.session.returnTo || "/campgrounds";
+    res.redirect(redirect);
 }));
 
 module.exports = router;
