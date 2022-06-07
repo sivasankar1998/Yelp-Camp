@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const path = require('path')
 const methodOverride = require('method-override');
 const ejsMate = require('ejs-mate');
-const asyncCatch = require('./errorhandling/asyncCatch');
 const expressError = require('./errorhandling/ExpressError');
 const morgan = require('morgan');
 const session = require('express-session');
@@ -11,8 +10,6 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 
-const campGround = require('./models/campGround');
-const Reviews = require('./models/reviews');
 const User = require('./models/users');
 
 const campRoute = require('./routes/campgrounds');
@@ -45,7 +42,7 @@ const sessionConfig = {
         maxAge: (1000*60*60*24*7),
         httpOnly: true
     }
-}
+};
 app.use(session(sessionConfig));
 app.use(flash());
 
@@ -57,7 +54,6 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use((req,res,next)=> {
-    console.log(req.path,req.originalUrl);
     if (!req.isAuthenticated() && req.originalUrl !== '/login' && req.originalUrl !== '/campgrounds') {
         req.session.returnTo = req.originalUrl;
     };

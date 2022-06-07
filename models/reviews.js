@@ -1,3 +1,4 @@
+const { types } = require('joi');
 const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
@@ -9,6 +10,10 @@ const reviewSchema = new Schema({
     body:{
         type:String,
         required:true
+    },
+    submittedBy:{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }
 });
 

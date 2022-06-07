@@ -8,17 +8,22 @@
     </div>
     <ul class="list-group list-group-flush">
         <li class="list-group-item text-muted"><%= campground.location %></li>
-      <li class="list-group-item">Price = <%= campground.price %>$/night</li>
+      <li class="list-group-item">Price: <%= campground.price %>$/night</li>
+      <li class="list-group-item">Submitted by: <%= campground.submittedBy.username %></li>
     </ul>
     <div class="card-body">
+      <% if(currentUser && currentUser._id.equals(campground.submittedBy._id)) {%> 
         <div>
             <a href="/campgrounds/<%= campground._id%>/edit" class="btn btn-warning m-1 px-3">Edit</a>
-            <a href="/campgrounds" class="btn btn-secondary  m-1">All Campgrounds</a>
         </div>
         <div>
             <form action="/campgrounds/<%= campground._id%>?_method=DELETE" class="form" method="post">
                 <button class="btn btn-danger m-1">Delete</button>
             </form>
+        </div>
+        <% } %> 
+        <div>
+          <a href="/campgrounds" class="btn btn-secondary  m-1">All Campgrounds</a>
         </div>
     </div>
     <div class="card-footer text-muted">
@@ -26,6 +31,7 @@
     </div>
 </div>
 <div class="col-6 my-3">
+  <% if(currentUser) {%>
   <h2>Leave a Review</h2>
   <form action="/campgrounds/<%= campground._id%>/reviews" method="post">
     <div class="my-3">
@@ -39,20 +45,24 @@
       </div>
       <button class="btn btn-success">Submit</button>
     </div>
-    </form>
+  </form>
+  <% } %>  
     <div>
       <% for(let review of campground.reviews){%>
         <div class="card my-3">
         <div class="class-body m-3 row">
           <div class="col-6">
-            <h5>rating: <%= review.rating %> </h5>
-            <h7>review: <%= review.body %> </h7>
+            <h5>Rating: <%= review.rating %> </h5>
+            <h6 class="card-subtitle mb-2 text-muted">By: <%= review.submittedBy.username %></h6>
+            <p class="card-text">Review: <%= review.body %></p> 
           </div>
-        <div class="my-1 col-6 text-end">
+        <% if(currentUser && currentUser._id.equals(review.submittedBy._id)) {%> 
+          <div class="my-1 col-6 text-end">
           <form action="/campgrounds/<%= campground._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
             <button class="btn btn-sm btn-danger">Delete</button>
           </form>
-        </div>
+          </div>
+          <% } %> 
         </div>  
         </div>
       <% } %>

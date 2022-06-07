@@ -18,6 +18,7 @@ const dbwrite = async ()=>{
         let title=seed.descriptors[num(seed.descriptors.length)]+" "+seed.places[num(seed.places.length)];
         let location=cities[num(cities.length)];
         let camp = new campGround({
+            submittedBy:'629dc0083a5002d727aab5a3',
             title:`${title}`,
             location:`${location.city},${location.state}`,
             image:'http://source.unsplash.com/collection/483251',

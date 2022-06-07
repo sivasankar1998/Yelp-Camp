@@ -11,7 +11,11 @@ const campGroundSchema = new Schema({
     reviews:[{
         type: Schema.Types.ObjectId,
         ref: 'Review'
-    }]
+    }],
+    submittedBy:{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }
 });
 
 campGroundSchema.post('findOneAndDelete',async function(doc){
