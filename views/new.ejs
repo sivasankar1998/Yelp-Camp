@@ -1,5 +1,5 @@
 <% layout('layouts/boilerplate') %>
-    <h1 class="text-center m-3">Create new Campground</h1>
+    <h1 class="text-center m-3">Create a new Campground</h1>
     <div class="col-6 offset-3">
         <form action="/campgrounds" class="col" method="POST">
             <div class="col-md-12 mb-3">
@@ -17,7 +17,7 @@
             <div class="col-md-12 mb-3">
                 <label for="price" class="form-label">Price</label>
                 <div class="input-group mb-3">
-                    <span class="input-group-text" id="basic-addon1">$</span>
+                    <span class="input-group-text" id="basic-addon1"> $ </span>
                     <input type="text" placeholder="0.00" name="campground[price]" class="form-control" id="price" aria-describedby="price">
                 </div>
             </div>
@@ -25,9 +25,9 @@
                 <label for="description" class="form-label">Description</label>
                 <textarea class="form-control" name="campground[description]" id="description" aria-label="With textarea"></textarea>
             </div>
-            <div class="col-12 mx-auto text-left mb-3">
-                <button type="submit" class="btn btn-success">Create</button>
-                <a href="/campgrounds" class="btn btn-secondary ms-3">Back</a>
+            <div class="text-center ali d-flex justify-content-center flex-row mb-3">
+                <button type="submit" class="btn me-md-5 me-sm-3 btn-success">Create</button>
+                <a href="/campgrounds" class="btn btn-secondary me-sm-3 me-md-5">Back</a>
             </div>
         </form>
     </div>
