@@ -2,12 +2,15 @@ const express= require('express');
 const asyncCatch = require('../errorhandling/asyncCatch');
 const {checkAuthentication,newValidate,isAuthorizedUser} = require('../authMiddleware');
 const campgrounds = require('../controllers/campgrounds');
+const multer  = require('multer');
+const {storage} = require('../cloudinary');
+const upload = multer({storage});
 
 const router = express.Router({mergeParams:true});
 
 router.route('/')
     .get(asyncCatch(campgrounds.index))
-    .post(checkAuthentication,newValidate,asyncCatch(campgrounds.createCampground));
+    .post(checkAuthentication,upload.array('image'),newValidate,asyncCatch(campgrounds.createCampground));
 
 router.get('/new',checkAuthentication,campgrounds.renderNewForm);
 

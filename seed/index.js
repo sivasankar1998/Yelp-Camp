@@ -13,7 +13,7 @@ mongoose.connect('mongodb://localhost:27017/yelp-camp', {
 const dbwrite = async ()=>{
     await reviews.deleteMany({});
     await campGround.deleteMany({});
-    for(i=0;i<50;i++){
+    for(i=0;i<20;i++){
         let num=(len)=>(Math.floor(Math.random()*len));
         let title=seed.descriptors[num(seed.descriptors.length)]+" "+seed.places[num(seed.places.length)];
         let location=cities[num(cities.length)];
@@ -21,7 +21,7 @@ const dbwrite = async ()=>{
             submittedBy:'629dc0083a5002d727aab5a3',
             title:`${title}`,
             location:`${location.city},${location.state}`,
-            image:'http://source.unsplash.com/collection/483251',
+            image:[{path:'http://source.unsplash.com/collection/483251'}],
             price:`${num(30)}`,
             description:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates, sequi et exercitationem quas incidunt in dicta nostrum libero pariatur sint. Dignissimos, odit? Explicabo laudantium libero nisi deleniti facilis adipisci eaque.'
         });

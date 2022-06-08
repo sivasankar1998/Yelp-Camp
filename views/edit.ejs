@@ -10,10 +10,14 @@
         <label for="inputPassword4" class="form-label">Location</label>
         <input type="text" name="campground[location]" class="form-control" id="inputPassword4" value="<%= campground.location %>">
     </div>
-    <div class="col-md-12 mb-3">
-        <label for="image" class="form-label">Image URL</label>
-        <input type="text" name="campground[image]" class="form-control" id="image" value="<%= campground.image %>">
+    <div>
+        <label for="image" class="form-label">Add more Images</label>
+        <input type="file" name="image" id="image" multiple>
     </div>
+    <!-- <div class="col-md-12 mb-3">
+        <label for="image" class="form-label">Image URL</label>
+        <input type="text" name="campground[image]" class="form-control" id="image" value="">
+    </div> -->
     <div class="col-md-12 mb-3">
         <label for="price" class="form-label">Price</label>
         <div class="input-group mb-3">

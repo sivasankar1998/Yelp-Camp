@@ -1,7 +1,7 @@
 <% layout('layouts/boilerplate') %>
     <h1 class="text-center m-3">Create a new Campground</h1>
     <div class="col-6 offset-3">
-        <form action="/campgrounds" class="col" method="POST">
+        <form action="/campgrounds" class="col" method="POST" enctype="multipart/form-data">
             <div class="col-md-12 mb-3">
                 <label for="inputEmail4" class="form-label">Title</label>
                 <input type="text" name="campground[title]" class="form-control" id="inputEmail4">
@@ -10,10 +10,14 @@
                 <label for="inputPassword4" class="form-label">Location</label>
                 <input type="text" name="campground[location]" class="form-control" id="inputPassword4">
             </div>
-            <div class="col-md-12 mb-3">
+            <div>
+                <label for="image" class="form-label">Image</label>
+                <input type="file" name="image" id="image" multiple>
+            </div>
+            <!-- <div class="col-md-12 mb-3">
                 <label for="image" class="form-label">Image URL</label>
                 <input type="text" name="campground[image]" class="form-control" id="image">
-            </div>
+            </div> -->
             <div class="col-md-12 mb-3">
                 <label for="price" class="form-label">Price</label>
                 <div class="input-group mb-3">

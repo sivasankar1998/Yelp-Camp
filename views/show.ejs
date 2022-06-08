@@ -2,10 +2,28 @@
 <link rel="stylesheet" href="/css/stars.css">
 <div class="row row-cols-sm-1 row-cols-md-2">
 <div class="card col my-3">
-    <img src="<%= campground.image %>" class="img-thumbnail" alt="...">
+  <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <% for(let img of campground.image) {%> 
+        <div class="carousel-item">
+          <img src="<%= img.path %> " class="d-block w-100" alt="...">
+        </div>
+      <% } %> 
+    </div>
+    <% if(campground.image.length>1) {%> 
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+    <% } %> 
+  </div>
     <div class="card-body">
       <h5 class="card-title"><%= campground.title %></h5>
-      <p class="card-text"><%= campground.description %></p>
+      <p class="card-text"><%console.log(campground.description) %></p>
     </div>
     <ul class="list-group list-group-flush">
         <li class="list-group-item text-muted"><%= campground.location %></li>
@@ -83,3 +101,6 @@
   </div>
 </div>
 </div>
+<script>
+  document.querySelector(".carousel-inner").firstElementChild.classList.add("active");
+</script>

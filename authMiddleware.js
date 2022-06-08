@@ -11,7 +11,15 @@ module.exports.checkAuthentication = function(req,res,next){
 }
 
 module.exports.newValidate = (req,res,next)=>{
-    const {error} = newSchema.validate(req.body);
+/*     let camp = req.body;
+    let image = req.files.map(file => ({path:file.path,originalname:file.originalname,size:file.size,filename:file.filename}));
+    camp.image = image;
+    console.log("img",image);
+    camp.submittedBy = req.user._id;
+    res.locals.camp = camp;
+    console.log("sending.................",res.locals.camp); */
+    return next();
+    const {error} = newSchema.validate(camp);
     if(error){
         let msg = error.details.map(obj => obj.message).join(",");
         req.flash('error',msg);

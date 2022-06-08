@@ -17,6 +17,7 @@ module.exports.registerUser = async (req,res)=>{
         req.login(user, function (err) {
             if (!err){
                 let redirect = req.session.returnTo || "/campgrounds";
+                delete req.session.returnTo
                 return res.redirect(redirect);
             };
         });
@@ -37,5 +38,6 @@ module.exports.logoutUser = async (req,res,next)=>{
 module.exports.loginUser = async (req,res)=>{
     req.flash('success','Logged in');
     let redirect = req.session.returnTo || "/campgrounds";
+    delete req.session.returnTo
     res.redirect(redirect);
 };
