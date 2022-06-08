@@ -10,7 +10,7 @@ const router = express.Router({mergeParams:true});
 
 router.route('/')
     .get(asyncCatch(campgrounds.index))
-    .post(checkAuthentication,upload.array('image'),newValidate,asyncCatch(campgrounds.createCampground));
+    .post(checkAuthentication,newValidate,upload.array('image'),asyncCatch(campgrounds.createCampground));
 
 router.get('/new',checkAuthentication,campgrounds.renderNewForm);
 
@@ -19,7 +19,7 @@ router.get('/:id/edit',checkAuthentication,isAuthorizedUser,asyncCatch(campgroun
 
 router.route('/:id')
     .get(asyncCatch(campgrounds.showCampground))
-    .put(checkAuthentication,isAuthorizedUser,newValidate,asyncCatch(campgrounds.createCampground))
+    .put(checkAuthentication,isAuthorizedUser,newValidate,upload.array('image'),asyncCatch(campgrounds.editCampground))
     .delete(checkAuthentication,isAuthorizedUser,asyncCatch(campgrounds.deleteCampground));
 
 module.exports = router;

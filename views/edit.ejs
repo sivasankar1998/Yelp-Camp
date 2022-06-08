@@ -1,7 +1,7 @@
 <% layout('layouts/boilerplate') %>
 <h1 class="text-center m-3">Edit Campground</h1>
 <div class="col-6 offset-3">
-<form action="/campgrounds/<%= campground._id %>?_method=PUT" method="post">
+<form action="/campgrounds/<%= campground._id %>?_method=PUT" method="post" enctype="multipart/form-data">
      <div class="col-md-12 mb-3">
         <label for="inputEmail4" class="form-label">Title</label>
         <input type="text" name="campground[title]" class="form-control" id="inputEmail4" value="<%= campground.title %>">
@@ -10,14 +10,10 @@
         <label for="inputPassword4" class="form-label">Location</label>
         <input type="text" name="campground[location]" class="form-control" id="inputPassword4" value="<%= campground.location %>">
     </div>
-    <div>
-        <label for="image" class="form-label">Add more Images</label>
-        <input type="file" name="image" id="image" multiple>
+    <div class="mb-3 col-md-12">
+        <label for="image" class="form-label">Choose images of campground</label>
+        <input class="form-control" name="image" type="file" id="image" multiple>
     </div>
-    <!-- <div class="col-md-12 mb-3">
-        <label for="image" class="form-label">Image URL</label>
-        <input type="text" name="campground[image]" class="form-control" id="image" value="">
-    </div> -->
     <div class="col-md-12 mb-3">
         <label for="price" class="form-label">Price</label>
         <div class="input-group mb-3">
@@ -29,7 +25,23 @@
         <label for="description" class="form-label">Description</label>
         <textarea class="form-control" name="campground[description]" id="description" aria-label="With textarea" style="height: 100px"><%= campground.description %></textarea>
     </div>
-    <div class="col-12 mx-auto text-left mb-3">
+    <div class="container">
+        <h3 class="my-3">Select Images to delete</h3>
+        <div class="row row-cols-md-3 mb-3 row-cols-sm-2">
+            <% for(let i=0;i<campground.image.length;i++) {%> 
+            <div class="card col align-items-center">
+                <img src="<%= campground.image[i].path %>" class="img-thumbnail h-75" alt="<%= campground.image[i].originalname %>" id="d-image-<%= i %>">
+                <div class="card-body">
+                    <div class="form-check">
+                        <input class="form-check-input d-block" type="checkbox" name="deleteImages[]" value="<%= campground.image[i].filename %>" id="dImage<%= i %>">
+                        <label class="form-check-label" for="dImage<%= i %>">Delete</label>
+                    </div>
+                </div>
+            </div>
+          <% } %> 
+        </div>
+    </div>
+    <div class="col-12 mx-auto text-center mb-3">
         <button type="submit" class="btn px-3 btn-success">Edit</button>
         <a href="/campgrounds/<%= campground._id%>" class="btn btn-secondary ms-3">Back</a>
     </div>

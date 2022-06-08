@@ -9,7 +9,7 @@ module.exports.newSchema = joi.object({
             filename:joi.string(),
             size:joi.number(),
             originalname:joi.string()
-        })).required(),
+        })),
         price: joi.number().min(0).required(),
         description: joi.string().required()
     })

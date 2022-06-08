@@ -1,6 +1,7 @@
 const {newSchema} = require('./errorhandling/joiSchema');
 const campGround = require('./models/campGround');
 const {reviewSchema} = require('./errorhandling/joiSchema');
+const expressError = require('./errorhandling/ExpressError');
 
 module.exports.checkAuthentication = function(req,res,next){
     if(!req.isAuthenticated()){
@@ -11,15 +12,7 @@ module.exports.checkAuthentication = function(req,res,next){
 }
 
 module.exports.newValidate = (req,res,next)=>{
-/*     let camp = req.body;
-    let image = req.files.map(file => ({path:file.path,originalname:file.originalname,size:file.size,filename:file.filename}));
-    camp.image = image;
-    console.log("img",image);
-    camp.submittedBy = req.user._id;
-    res.locals.camp = camp;
-    console.log("sending.................",res.locals.camp); */
-    return next();
-    const {error} = newSchema.validate(camp);
+    const {error} = newSchema.validate(req.body);
     if(error){
         let msg = error.details.map(obj => obj.message).join(",");
         req.flash('error',msg);
