@@ -1,12 +1,17 @@
 <% layout('layouts/boilerplate') %>
 <link rel="stylesheet" href="/css/stars.css">
-<div class="row row-cols-sm-1 row-cols-md-2">
+<% if(campground.reviews.length==0 && currentUser) {%> 
+<div class="row row-cols-1 row-cols-lg-2">
 <div class="card col my-3">
+<% }else {%>
+<div class="row row-cols-1">
+<div class="card col col-md-6 offset-md-3 my-3">
+<% } %>  
   <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
       <% for(let img of campground.image) {%> 
         <div class="carousel-item">
-          <img src="<%= img.path %> " class="d-block w-100" alt="...">
+          <img src="<%= img.path %> " class="d-block w-100" alt="..." crossorigin>
         </div>
       <% } %> 
     </div>
@@ -30,7 +35,7 @@
       <li class="list-group-item">Price: <%= campground.price %>$/night</li>
       <li class="list-group-item">Submitted by: <%= campground.submittedBy.username %></li>
     </ul>
-    <div class="card-body row row-cols-sm-1 row-cols-md-3">
+    <div class="card-body row ">
       <% if(currentUser && currentUser._id.equals(campground.submittedBy._id)) {%> 
         <div class="col text-center">
             <a href="/campgrounds/<%= campground._id%>/edit" class="btn btn-warning m-1 px-3">Edit</a>
@@ -49,6 +54,7 @@
         2 days ago
     </div>
 </div>
+<% if(campground.reviews.length==0 && currentUser) {%> 
 <div class="col my-3">
   <% if(currentUser) {%>
     <h2>Leave a Review</h2>
@@ -100,6 +106,7 @@
       <% } %>
   </div>
 </div>
+<% } %> 
 </div>
 <script>
   document.querySelector(".carousel-inner").firstElementChild.classList.add("active");

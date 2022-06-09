@@ -1,6 +1,6 @@
 <% layout('layouts/boilerplate') %>
 <h1 class="text-center m-3">Edit Campground</h1>
-<div class="col-6 offset-3">
+<div class="col col-md-6 offset-md-3">
 <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="post" enctype="multipart/form-data">
      <div class="col-md-12 mb-3">
         <label for="inputEmail4" class="form-label">Title</label>
@@ -30,7 +30,7 @@
         <div class="row row-cols-md-3 mb-3 row-cols-sm-2">
             <% for(let i=0;i<campground.image.length;i++) {%> 
             <div class="card col align-items-center">
-                <img src="<%= campground.image[i].path %>" class="img-thumbnail h-75" alt="<%= campground.image[i].originalname %>" id="d-image-<%= i %>">
+                <img src="<%= campground.image[i].path %>" class="img-thumbnail h-75" alt="<%= campground.image[i].originalname %>" id="d-image-<%= i %>" crossorigin>
                 <div class="card-body">
                     <div class="form-check">
                         <input class="form-check-input d-block" type="checkbox" name="deleteImages[]" value="<%= campground.image[i].filename %>" id="dImage<%= i %>">

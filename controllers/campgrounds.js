@@ -41,18 +41,35 @@ module.exports.createCampground = async (req,res,next)=>{
 
 module.exports.editCampground = async (req,res,next)=>{
     let {id} = req.params;
-    console.log(req.body)
-    let images = req.files.map(file => ({path:file.path,originalname:file.originalname,size:file.size,filename:file.filename}));
+    console.log(req.files);
     let camp = await campGround.findByIdAndUpdate(id,{...req.body.campground});
+    if(req.files){
+    let images = req.files.map(file => ({path:file.path,originalname:file.originalname,size:file.size,filename:file.filename}));
     camp.image.push(...images);
+    };
     if(req.body.deleteImages){
-        if(req.body.deleteImages.length<camp.image.length){
-            for (let filename of req.body.deleteImages) {
-                cloudinary.uploader.destroy(filename);}
-            camp.updateOne({$pull:{image:{filename:{$in:req.body.deleteImages}}}}); 
-        }else{
-            req.flash('error','Need atleast one image');
-        }
+        //if(!req.files){
+            if(req.body.deleteImages.length<camp.image.length){
+                console.log(req.body);
+                for (let filename of req.body.deleteImages) {
+                    await cloudinary.uploader.destroy(filename);  
+                }
+                req.flash('success','Images deleted successfully')
+                await camp.updateOne({$pull:{image:{filename:{$in:req.body.deleteImages}}}});
+            }else{
+                req.flash('error','Need atleast one image');
+            };
+/*         }else{
+            if(Math.abs(req.files.length-req.body.deleteImages.length)<=camp.image.length){
+                for (let filename of req.body.deleteImages) {
+                    await cloudinary.uploader.destroy(filename);  
+                }
+                req.flash('success','Images deleted successfully')
+                await camp.updateOne({$pull:{image:{filename:{$in:req.body.deleteImages}}}});
+            }else{
+                req.flash('error','Need atleast one image');
+            }
+        } */
     };
     await camp.save();
     req.flash('success','Campground edited successfully!!!');
@@ -61,7 +78,12 @@ module.exports.editCampground = async (req,res,next)=>{
 
 module.exports.deleteCampground = async (req,res,next)=>{
     let {id} = req.params;
-    await campGround.findByIdAndDelete(id);
+    let camp = await campGround.findByIdAndDelete(id);
+    for(img of camp.image){
+        if(img.filename){
+            await cloudinary.uploader.destroy(img.filename);
+        }
+    };
     req.flash('success','Campground deleted successfully!!!');
     res.redirect('/campgrounds');
 };

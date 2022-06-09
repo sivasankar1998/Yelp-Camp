@@ -2,6 +2,7 @@ const {newSchema} = require('./errorhandling/joiSchema');
 const campGround = require('./models/campGround');
 const {reviewSchema} = require('./errorhandling/joiSchema');
 const expressError = require('./errorhandling/ExpressError');
+const { redirect } = require('express/lib/response');
 
 module.exports.checkAuthentication = function(req,res,next){
     if(!req.isAuthenticated()){
@@ -16,7 +17,7 @@ module.exports.newValidate = (req,res,next)=>{
     if(error){
         let msg = error.details.map(obj => obj.message).join(",");
         req.flash('error',msg);
-        res.redirect('/campgrounds/new')
+        res.redirect(req.returnTo);
     }
     else{
         next();
@@ -28,7 +29,8 @@ module.exports.isAuthorizedUser = async (req,res,next)=>{
     let campground = await campGround.findById(id);
     if(!campground.submittedBy.equals(req.user._id)){
         req.flash('error',"Not authorized to do that");
-        return res.redirect(`/campgrounds/${id}`);
+        redirect = req.returnTo || `/campgrounds/${id}`;
+        return res.redirect(redirect);
     };
     next();
 };
