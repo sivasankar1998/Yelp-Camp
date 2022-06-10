@@ -2,7 +2,7 @@ if(process.env.NODE_ENV !== "production"){
     require('dotenv').config();
 };
 
-const dbUrl = process.env.db_url;
+const dbUrl = process.env.db_heroku || process.env.db_url;
 const secret = process.env.SECRET || "secretcookie";
  
 const express= require('express');
@@ -19,7 +19,7 @@ const LocalStrategy = require('passport-local');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 const MongoStore = require('connect-mongo');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient } = require('mongodb');
 
 const User = require('./models/users');
 
@@ -30,22 +30,12 @@ const authRoute = require('./routes/userAuth');
 const app = express();
 
 const mongoConnection = async()=>{
-    const credentials = process.env.cert_path;
-    const client = new MongoClient(dbUrl, {
-    sslKey: credentials,
-    sslCert: credentials,
-    serverApi: ServerApiVersion.v1
-    });
+    const client = new MongoClient(dbUrl);
     try {
         await client.connect();
-        let mongoosePromise = await mongoose.connect(dbUrl,{
+        await mongoose.connect(dbUrl,{
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            ssl: true,
-            sslValidate: true,
-            authMechanism: 'MONGODB-X509',
-            sslCert: process.env.cert_path,
-            sslKey: process.env.cert_path,
         })
         .then(console.log('db connected'))
         .catch(err=>console.log(err));
@@ -60,7 +50,7 @@ let clientPromise = mongoConnection();
 const store = MongoStore.create({
     clientPromise,
     touchAfter: 24*60*60,
-    secret:'secretcookie'
+    secret
 });
 
 app.engine('ejs',ejsMate);
@@ -106,11 +96,11 @@ const styleSrcUrls = [
     "https://use.fontawesome.com/",
     "https://cdn.jsdelivr.net"
 ];
-/* const connectSrcUrls = [
-    "https://a.tiles.mapbox.com/",
-    "https://b.tiles.mapbox.com/",
-    "https://events.mapbox.com/",
-]; */
+const connectSrcUrls = [
+    //"https://a.tiles.mapbox.com/",
+    //"https://b.tiles.mapbox.com/",
+    //"https://events.mapbox.com/",
+];
 const fontSrcUrls = [];
 
 app.use(
