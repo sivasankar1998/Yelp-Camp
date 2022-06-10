@@ -15,22 +15,13 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
-const fs = require('fs');
-const redis = require('redis');
-const connectRedis = require('connect-redis');
+const MongoStore = require('connect-mongo');
 
-const redisStore = connectRedis(session);
-const redisClient = redis.createClient();
-
-redisClient.on('error',(err)=>{
-    console.log('Could not establish a connection with redis. ' + err);
-});
-redisClient.on('connect',()=>{
-    console.log('Connected to redis successfully');
-});
-
-//redisClient.connect();
-
+const store = MongoStore.create({
+    mongoUrl:'mongodb://localhost:27017/yelp-camp',
+    touchAfter: 24*60*60,
+    secret:'secretcookie'
+})
 const User = require('./models/users');
 
 const campRoute = require('./routes/campgrounds');
@@ -61,8 +52,8 @@ app.use(methodOverride('_method'));
 app.use(morgan('dev'));
 
 const sessionConfig = {
-    store: new redisStore({ client: redisClient }),
     name:'session',
+    store,
     secret:'secretcookie',
     resave:false,
     saveUninitialized:true,

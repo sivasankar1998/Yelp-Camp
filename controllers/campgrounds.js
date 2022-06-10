@@ -26,7 +26,8 @@ module.exports.showCampground = async (req,res,next)=>{
         req.flash('error','No Campground found by that ID');
         return res.redirect('/campgrounds');
     };
-    res.render('show',{campground});
+    let User = req.user || "test";
+    res.render('show',{campground,User});
 };
 
 module.exports.createCampground = async (req,res,next)=>{

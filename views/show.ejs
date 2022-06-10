@@ -1,6 +1,6 @@
 <% layout('layouts/boilerplate') %>
 <link rel="stylesheet" href="/css/stars.css">
-<% if(campground.reviews.length==0 && currentUser) {%> 
+<% if(campground.reviews.length==0 && currentUser || campground.reviews.length!==0 && currentUser) {%> 
 <div class="row row-cols-1 row-cols-lg-2">
 <div class="card col my-3">
 <% }else {%>
@@ -35,7 +35,7 @@
       <li class="list-group-item">Price: <%= campground.price %>$/night</li>
       <li class="list-group-item">Submitted by: <%= campground.submittedBy.username %></li>
     </ul>
-    <div class="card-body row ">
+    <div class="card-body row">
       <% if(currentUser && currentUser._id.equals(campground.submittedBy._id)) {%> 
         <div class="col text-center">
             <a href="/campgrounds/<%= campground._id%>/edit" class="btn btn-warning m-1 px-3">Edit</a>
@@ -54,7 +54,7 @@
         2 days ago
     </div>
 </div>
-<% if(campground.reviews.length==0 && currentUser) {%> 
+<% if(campground.reviews.length==0 && currentUser || campground.reviews.length!==0 && currentUser) {%> 
 <div class="col my-3">
   <% if(currentUser) {%>
     <h2>Leave a Review</h2>
