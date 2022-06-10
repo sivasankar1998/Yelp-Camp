@@ -1,6 +1,9 @@
 if(process.env.NODE_ENV !== "production"){
     require('dotenv').config();
 };
+
+const dbUrl = process.env.db_url;
+const secret = process.env.SECRET || "secretcookie";
  
 const express= require('express');
 const mongoose = require('mongoose');
@@ -16,12 +19,8 @@ const LocalStrategy = require('passport-local');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 const MongoStore = require('connect-mongo');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 
-const store = MongoStore.create({
-    mongoUrl:'mongodb://localhost:27017/yelp-camp',
-    touchAfter: 24*60*60,
-    secret:'secretcookie'
-})
 const User = require('./models/users');
 
 const campRoute = require('./routes/campgrounds');
@@ -30,17 +29,39 @@ const authRoute = require('./routes/userAuth');
 
 const app = express();
 
-mongoose.connect(process.env.db_url,{
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    ssl: true,
-    sslValidate: true,
-    authMechanism: 'MONGODB-X509',
-    sslCert: process.env.cert_path,
-    sslKey: process.env.cert_path
-})
-.then(console.log('db connected'))
-.catch(err=>console.log(err));
+const mongoConnection = async()=>{
+    const credentials = process.env.cert_path;
+    const client = new MongoClient(dbUrl, {
+    sslKey: credentials,
+    sslCert: credentials,
+    serverApi: ServerApiVersion.v1
+    });
+    try {
+        await client.connect();
+        let mongoosePromise = await mongoose.connect(dbUrl,{
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            ssl: true,
+            sslValidate: true,
+            authMechanism: 'MONGODB-X509',
+            sslCert: process.env.cert_path,
+            sslKey: process.env.cert_path,
+        })
+        .then(console.log('db connected'))
+        .catch(err=>console.log(err));
+        return client;
+    }catch(e){
+        console.log(e);
+    } 
+};
+
+let clientPromise = mongoConnection();
+
+const store = MongoStore.create({
+    clientPromise,
+    touchAfter: 24*60*60,
+    secret:'secretcookie'
+});
 
 app.engine('ejs',ejsMate);
 app.set('view engine', 'ejs');
@@ -54,7 +75,7 @@ app.use(morgan('dev'));
 const sessionConfig = {
     name:'session',
     store,
-    secret:'secretcookie',
+    secret,
     resave:false,
     saveUninitialized:true,
     cookie:{
@@ -85,12 +106,11 @@ const styleSrcUrls = [
     "https://use.fontawesome.com/",
     "https://cdn.jsdelivr.net"
 ];
-const connectSrcUrls = [
-    /* "https:/mongo "mongodb://ac-vms6z08-shard-00-00.jwh3d3x.mongodb.net:27017,ac-vms6z08-shard-00-01.jwh3d3x.mongodb.net:27017,ac-vms6z08-shard-00-02.jwh3d3x.mongodb.net:27017/myFirstDatabase?replicaSet=atlas-gr211h-shard-0&authSource=%24external&authMechanism=MONGODB-X509" --ssl --sslPEMKeyFilemongo "mongodb://ac-vms6z08-shard-00-00.jwh3d3x.mongodb.net:27017,ac-vms6z08-shard-00-01.jwh3d3x.mongodb.net:27017,ac-vms6z08-shard-00-02.jwh3d3x.mongodb.net:27017/myFirstDatabase?replicaSet=atlas-gr211h-shard-0&authSource=%24external&authMechanism=MONGODB-X509" --ssl --sslPEMKeyFile/api.mapbox.com/",
+/* const connectSrcUrls = [
     "https://a.tiles.mapbox.com/",
     "https://b.tiles.mapbox.com/",
-    "https://events.mapbox.com/", */
-];
+    "https://events.mapbox.com/",
+]; */
 const fontSrcUrls = [];
 
 app.use(
