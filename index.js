@@ -15,6 +15,21 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
+const fs = require('fs');
+const redis = require('redis');
+const connectRedis = require('connect-redis');
+
+const redisStore = connectRedis(session);
+const redisClient = redis.createClient();
+
+redisClient.on('error',(err)=>{
+    console.log('Could not establish a connection with redis. ' + err);
+});
+redisClient.on('connect',()=>{
+    console.log('Connected to redis successfully');
+});
+
+//redisClient.connect();
 
 const User = require('./models/users');
 
@@ -24,9 +39,14 @@ const authRoute = require('./routes/userAuth');
 
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/yelp-camp',{
+mongoose.connect(process.env.db_url,{
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    ssl: true,
+    sslValidate: true,
+    authMechanism: 'MONGODB-X509',
+    sslCert: process.env.cert_path,
+    sslKey: process.env.cert_path
 })
 .then(console.log('db connected'))
 .catch(err=>console.log(err));
@@ -41,6 +61,7 @@ app.use(methodOverride('_method'));
 app.use(morgan('dev'));
 
 const sessionConfig = {
+    store: new redisStore({ client: redisClient }),
     name:'session',
     secret:'secretcookie',
     resave:false,
@@ -74,7 +95,7 @@ const styleSrcUrls = [
     "https://cdn.jsdelivr.net"
 ];
 const connectSrcUrls = [
-    /* "https://api.mapbox.com/",
+    /* "https:/mongo "mongodb://ac-vms6z08-shard-00-00.jwh3d3x.mongodb.net:27017,ac-vms6z08-shard-00-01.jwh3d3x.mongodb.net:27017,ac-vms6z08-shard-00-02.jwh3d3x.mongodb.net:27017/myFirstDatabase?replicaSet=atlas-gr211h-shard-0&authSource=%24external&authMechanism=MONGODB-X509" --ssl --sslPEMKeyFilemongo "mongodb://ac-vms6z08-shard-00-00.jwh3d3x.mongodb.net:27017,ac-vms6z08-shard-00-01.jwh3d3x.mongodb.net:27017,ac-vms6z08-shard-00-02.jwh3d3x.mongodb.net:27017/myFirstDatabase?replicaSet=atlas-gr211h-shard-0&authSource=%24external&authMechanism=MONGODB-X509" --ssl --sslPEMKeyFile/api.mapbox.com/",
     "https://a.tiles.mapbox.com/",
     "https://b.tiles.mapbox.com/",
     "https://events.mapbox.com/", */

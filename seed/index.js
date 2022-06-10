@@ -1,11 +1,21 @@
+if(process.env.NODE_ENV !== "production"){
+    require('dotenv').config();
+};
+
 const mongoose = require('mongoose');
 const campGround = require('../models/campGround');
 const reviews = require('../models/reviews');
 const cities = require('./cities');
 const seed = require('./seedHelpers');
-mongoose.connect('mongodb://localhost:27017/yelp-camp', {
+
+mongoose.connect(process.env.db_url,{
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    ssl: true,
+    sslValidate: true,
+    authMechanism: 'MONGODB-X509',
+    sslCert: `/home/siva/web_dev/YelpCamp/X509-cert-3888626372674993216.pem`,
+    sslKey: `/home/siva/web_dev/YelpCamp/X509-cert-3888626372674993216.pem`
 })
 .then(console.log('db connected'))
 .catch(err=>console.log(err));
